@@ -27,14 +27,14 @@ allprojects {
 
 
 }
-
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            pom.groupId = 'com.code.cpimage'
-            pom.artifactId = 'CpImage'
-            pom.version = '1.0.0'
-            repository(url: uri('../repo'))
-        }
-    }
-}
+//
+//uploadArchives {
+//    repositories {
+//        mavenDeployer {
+//            pom.groupId = 'com.code.cpimage'
+//            pom.artifactId = 'CpImage'
+//            pom.version = '1.0.0'
+//            repository(url: uri('../repo'))
+//        }
+//    }
+//}
