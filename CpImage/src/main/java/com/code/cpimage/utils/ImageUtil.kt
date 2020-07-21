@@ -21,7 +21,9 @@ class ImageUtil {
             return file.name.endsWith(Const.JPG) || file.name.endsWith(
                 Const.JPEG)
         }
-
+        fun isPNG(file: File): Boolean {
+            return file.name.endsWith(Const.PNG)
+        }
         fun isAlphaPNG(filePath: File): Boolean {
             return if (filePath.exists()) {
                 try {

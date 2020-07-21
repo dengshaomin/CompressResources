@@ -14,35 +14,17 @@ class CompressUtil {
             val oldSize = imgFile.length()
             val newSize: Long
             if (ImageUtil.isJPG(imgFile)) {
-                val tempFilePath: String =
-                    "${imgFile.path.substring(0, imgFile.path.lastIndexOf("."))}_temp" +
-                            imgFile.path.substring(imgFile.path.lastIndexOf("."))
                 Tools.cmd(
                     "guetzli",
-                    "${imgFile.path} $tempFilePath"
+                    "${imgFile.path} ${imgFile.path}"
                 )
-                val tempFile = File(tempFilePath)
-                newSize = tempFile.length()
-                if (newSize < oldSize) {
-                    val imgFileName: String = imgFile.path
-                    if (imgFile.exists()) {
-                        imgFile.delete()
-                        LogUtil.log("compress success,delete " + !imgFile.exists())
-                    }
-                    tempFile.renameTo(File(imgFileName))
-                } else {
-                    if (tempFile.exists()) {
-                        tempFile.delete()
-                        LogUtil.log("compress error,delete " + !tempFile.exists())
-                    }
-                }
-            } else {
+            } else if (ImageUtil.isPNG(imgFile)) {
                 Tools.cmd(
                     "pngquant",
-                    "--skip-if-larger --speed 1 --nofs --strip --force --output ${imgFile.path} -- ${imgFile.path}"
+                    "--skip-if-larger --speed 1 --nofs --strip ${imgFile.path} --ext=.png --force"
                 )
-                newSize = File(imgFile.path).length()
             }
+            newSize = File(imgFile.path).length()
             LogUtil.log(
                 TAG,
                 imgFile.path,

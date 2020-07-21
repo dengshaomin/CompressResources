@@ -9,9 +9,7 @@ import java.io.InputStreamReader
 class Tools {
 
     companion object {
-        fun cmd(tcmd: String, params: String) {
-            var cmd  = if(isMac()) "chmod a+x " else ""
-            cmd += tcmd
+        fun cmd(cmd: String, params: String) {
             val cmdStr = if (isCmdExist(cmd)) {
                 "$cmd $params"
             } else {
