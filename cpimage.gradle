@@ -3,7 +3,7 @@ McImageConfig {
     isCheckSize true //Whether to detect image size，default true
     optimizeType "Compress"
     //Optimize Type，"ConvertWebp" or "Compress"，default "Compress", "CompressWebp" is a better compression ratio but it don't support api < 18
-    maxSize 1 * 1024 * 1024 //big image size threshold，default 1MB
+    maxSize 10 * 1024 * 1024 //big image size threshold，default 1MB
     enableWhenDebug true //switch in debug build，default true
     isCheckPixels true // Whether to detect image pixels of width and height，default true
     maxWidth 1000 //default 1000
@@ -16,6 +16,6 @@ McImageConfig {
     //Whether support convert the Image with Alpha chanel to Webp，default false, the images with alpha chanels will be compressed.if config true, its need api level >=18 or do some compatible measures
     multiThread true  //Whether open multi-thread processing，default true
     bigImageWhiteList = [
-            "cars_1.jpg"
+            "cars_1.jpg",
     ] //do not detect big size or large pixels for the images who in the list
 }

@@ -9,11 +9,10 @@ import java.io.InputStreamReader
 class Tools {
 
     companion object {
-        fun cmd(cmd: String, params: String) {
-            val cmdStr = if (isCmdExist(
-                    cmd
-                )
-            ) {
+        fun cmd(tcmd: String, params: String) {
+            var cmd  = if(isMac()) "" else ""
+            cmd += tcmd
+            val cmdStr = if (isCmdExist(cmd)) {
                 "$cmd $params"
             } else {
                 when {

@@ -23,7 +23,6 @@ class CompressUtil {
                 )
                 val tempFile = File(tempFilePath)
                 newSize = tempFile.length()
-                LogUtil.log("newSize = $newSize")
                 if (newSize < oldSize) {
                     val imgFileName: String = imgFile.path
                     if (imgFile.exists()) {
@@ -44,7 +43,6 @@ class CompressUtil {
                 )
                 newSize = File(imgFile.path).length()
             }
-
             LogUtil.log(
                 TAG,
                 imgFile.path,
