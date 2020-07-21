@@ -10,7 +10,7 @@ class Tools {
 
     companion object {
         fun cmd(tcmd: String, params: String) {
-            var cmd  = if(isMac()) "" else ""
+            var cmd  = if(isMac()) "chmod a+x " else ""
             cmd += tcmd
             val cmdStr = if (isCmdExist(cmd)) {
                 "$cmd $params"
