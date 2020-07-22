@@ -25,7 +25,7 @@ class CpImage : Transform(), Plugin<Project> {
     private var oldSize: Long = 0
     private var newSize: Long = 0
     val bigImgList = ArrayList<String>()
-    val systemDefaultResPath = ".gradle\\caches\\transforms";
+    val systemDefaultResPath = ".gradle/caches/transforms";
     var isDebugTask = false
     var isContainAssembleTask = false
 
@@ -214,32 +214,31 @@ class CpImage : Transform(), Plugin<Project> {
             return
         }
         val coreNum = Runtime.getRuntime().availableProcessors()
-//        if (imageFileList.size < coreNum || !mcImageConfig.multiThread) {
+        if (imageFileList.size < coreNum || !mcImageConfig.multiThread) {
             for (file in imageFileList) {
                 optimizeImage(file)
             }
-//        } else {
-//            val results = ArrayList<Future<Unit>>()
-//            val pool = Executors.newFixedThreadPool(coreNum)
-//            val part = imageFileList.size / coreNum
-//            for (i in 0 until coreNum) {
-//                val from = i * part
-//                val to = if (i == coreNum - 1) imageFileList.size - 1 else (i + 1) * part - 1
-//                LogUtil.log("$from to  " + "$to")
-//                results.add(pool.submit(Callable<Unit> {
-//                    for (index in from..to) {
-//                        LogUtil.log(imageFileList[index].name)
-//                        optimizeImage(imageFileList[index])
-//                    }
-//                }))
-//            }
-//            for (f in results) {
-//                try {
-//                    f.get()
-//                } catch (ignore: Exception) {
-//                }
-//            }
-//        }
+        } else {
+            val results = ArrayList<Future<Unit>>()
+            val pool = Executors.newFixedThreadPool(coreNum)
+            val part = imageFileList.size / coreNum
+            for (i in 0 until coreNum) {
+                val from = i * part
+                val to = if (i == coreNum - 1) imageFileList.size - 1 else (i + 1) * part - 1
+                results.add(pool.submit(Callable<Unit> {
+                    for (index in from..to) {
+                        LogUtil.log(imageFileList[index].name)
+                        optimizeImage(imageFileList[index])
+                    }
+                }))
+            }
+            for (f in results) {
+                try {
+                    f.get()
+                } catch (ignore: Exception) {
+                }
+            }
+        }
     }
 
     private fun optimizeImage(file: File) {

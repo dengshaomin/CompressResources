@@ -54,10 +54,10 @@ class ImageUtil {
 
         fun isBigPixelImage(imgFile: File, maxWidth: Int, maxHeight: Int): Boolean {
             if (isImage(imgFile)) {
-//                val sourceImg = ImageIO.read(FileInputStream(imgFile))
-//                if (sourceImg.height > maxHeight || sourceImg.width > maxWidth) {
-//                    return true
-//                }
+                val sourceImg = ImageIO.read(FileInputStream(imgFile))
+                if (sourceImg.height > maxHeight || sourceImg.width > maxWidth) {
+                    return true
+                }
             }
             return false
         }
