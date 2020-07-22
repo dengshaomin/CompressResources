@@ -25,7 +25,8 @@ class CpImage : Transform(), Plugin<Project> {
     private var oldSize: Long = 0
     private var newSize: Long = 0
     val bigImgList = ArrayList<String>()
-    val systemDefaultResPath = if(Tools.isMac()) ".gradle/caches/transforms" else ".gradle\\caches\\transforms"
+    val systemDefaultResPath =
+        if (Tools.isMac()) ".gradle/caches/transforms" else ".gradle\\caches\\transforms"
     var isDebugTask = false
     var isContainAssembleTask = false
 
