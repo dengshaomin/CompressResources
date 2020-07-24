@@ -2,6 +2,7 @@ package com.code.cpimage
 
 import com.android.build.api.transform.QualifiedContent
 import com.android.build.api.transform.Transform
+import com.android.build.api.transform.TransformInvocation
 import com.android.build.gradle.AppExtension
 import com.android.build.gradle.LibraryExtension
 import com.android.build.gradle.internal.api.BaseVariantImpl
@@ -32,7 +33,6 @@ class CpImage : Transform(), Plugin<Project> {
     override fun apply(project: Project) {
         System.out.println("ktplugin")
         mcImageProject = project
-
 //        project.extensions.getByType()
         //check is library or application
         val hasAppPlugin = project.plugins.hasPlugin("com.android.application")
@@ -45,7 +45,6 @@ class CpImage : Transform(), Plugin<Project> {
         //set config
         project.extensions.create("McImageConfig", Config::class.java)
         mcImageConfig = project.property("McImageConfig") as Config
-
         project.gradle.taskGraph.whenReady {
             it.allTasks.forEach { task ->
                 val taskName = task.name
@@ -68,7 +67,6 @@ class CpImage : Transform(), Plugin<Project> {
             variants.all { variant ->
 
                 variant as BaseVariantImpl
-
                 checkMcTools(project)
 
                 val mergeResourcesTask = variant.mergeResourcesProvider.get()
@@ -138,7 +136,6 @@ class CpImage : Transform(), Plugin<Project> {
                 mergeResourcesTask.dependsOn(project.tasks.findByName(mcPicTask.name))
             }
         }
-
     }
 
     private fun traverseResDir(
@@ -192,7 +189,6 @@ class CpImage : Transform(), Plugin<Project> {
             return
         }
         if (removeSystemDefaultRes(file)) {
-            LogUtil.log(file.name)
             return
         }
         if (((mcImageConfig.isCheckSize && ImageUtil.isBigSizeImage(file, mcImageConfig.maxSize))

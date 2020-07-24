@@ -8,24 +8,24 @@
     tools:context=".MainActivity">
 
     <ImageView
+        android:id="@+id/image_0"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@mipmap/cars_0"
         android:scaleType="centerInside" />
 
     <ImageView
+        android:id="@+id/image_1"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@mipmap/cars_0"
         android:scaleType="centerInside" />
 
     <ImageView
+        android:id="@+id/image_2"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@mipmap/cars_0"
         android:scaleType="centerInside" />
 
 </LinearLayout>
