@@ -1,6 +1,5 @@
 package com.code.cpimage.utils
 
-import java.awt.image.ImageFilter
 import java.io.File
 
 class CompressUtil {
@@ -43,12 +42,13 @@ class CompressUtil {
                 )
             }
             newSize = File(imgFile.path).length()
-            LogUtil.log(
-                TAG,
-                imgFile.path,
-                oldSize.toString(),
-                newSize.toString()
-            )
+            if (newSize != oldSize)
+                LogUtil.log(
+                    TAG,
+                    imgFile.path,
+                    oldSize.toString(),
+                    newSize.toString()
+                )
         }
     }
 
