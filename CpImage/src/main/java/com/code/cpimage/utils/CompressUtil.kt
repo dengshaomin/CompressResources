@@ -38,7 +38,7 @@ class CompressUtil {
             } else if (ImageUtil.isPNG(imgFile)) {
                 Tools.cmd(
                     "pngquant",
-                    "--skip-if-larger --speed 1 --nofs --strip ${imgFile.path} --ext=.png --force"
+                    "--quality=65-80  --speed 1 --nofs --strip ${imgFile.path} --ext=.png --force"
                 )
             }
             newSize = File(imgFile.path).length()
