@@ -1,4 +1,3 @@
 include ':CpImage'
 include ':app'
 rootProject.name = "ResourceCompress"
-include ':compress'
