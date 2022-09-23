@@ -16,6 +16,6 @@ McImageConfig {
     //Whether support convert the Image with Alpha chanel to Webp，default false, the images with alpha chanels will be compressed.if config true, its need api level >=18 or do some compatible measures
     multiThread true  //Whether open multi-thread processing，default true
     bigImageWhiteList = [
-            "cars_3.png",
+            "cars_3.png","charger.jpg"
     ] //do not detect big size or large pixels for the images who in the list
 }

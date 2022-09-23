@@ -1,5 +1,7 @@
 package com.code.cpimage;
 
+import com.code.cpimage.utils.Tools;
+
 public class Config {
 
     public static final String OPTIMIZE_WEBP_CONVERT = "ConvertWebp"; //webp化
@@ -73,6 +75,15 @@ public class Config {
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("<<<<<<<<<<<<<<McConfig>>>>>>>>>>>>" + "\n");
+        String plat = "unknown";
+        if(Tools.Companion.isLinux()){
+            plat = "linux";
+        }else if(Tools.Companion.isMac()){
+            plat = "mac";
+        }else if(Tools.Companion.isWindows()){
+            plat = "windows";
+        }
+        result.append("plat:" + plat +"\n");
         result.append("maxSize :" + maxSize + "\n"
                 + "isCheckSize: " + isCheckSize + "\n"
                 + "optimizeType: " + optimizeType + "\n"

@@ -42,13 +42,19 @@ class CompressUtil {
                 )
             }
             newSize = File(imgFile.path).length()
-            if (newSize != oldSize)
-                LogUtil.log(
-                    TAG,
-                    imgFile.path,
-                    oldSize.toString(),
-                    newSize.toString()
-                )
+            LogUtil.log(
+                TAG,
+                imgFile.path,
+                oldSize.toString(),
+                newSize.toString(),
+                if (oldSize > newSize) {
+                    1
+                } else if (oldSize < newSize) {
+                    -1
+                } else {
+                    0
+                }
+            )
         }
     }
 
