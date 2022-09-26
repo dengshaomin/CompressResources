@@ -341,7 +341,7 @@ class CpImage : Transform(), Plugin<Project> {
     private fun totalOptimizeInfo(): String {
         return "->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n" +
                 "before McImage optimize: " + (oldReplaceSize + oldCompressSize) / 1024 + "KB\n" +
-                "after McImage optimize: " + (newReplaceSize + newReplaceSize) / 1024 + "KB\n" +
+                "after McImage optimize: " + (newReplaceSize + newCompressSize) / 1024 + "KB\n" +
                 "McImage optimize size: " + (oldReplaceSize + oldCompressSize - newReplaceSize - newCompressSize) / 1024 + "KB\n" +
                 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-"
     }
