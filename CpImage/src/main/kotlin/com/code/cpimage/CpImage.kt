@@ -23,9 +23,12 @@ class CpImage : Transform(), Plugin<Project> {
 
     private lateinit var mcImageProject: Project
     private lateinit var mcImageConfig: Config
-    private var oldSize: Long = 0
-    private var newSize: Long = 0
+    private var oldCompressSize: Long = 0
+    private var newCompressSize: Long = 0
+    private val noSizeChangeResource = mutableListOf<String>()
     val bigImgList = ArrayList<String>()
+    var oldReplaceSize = 0L
+    var newReplaceSize = 0L
     val systemDefaultResPath =
         if (Tools.isMac()) ".gradle/caches/transforms" else ".gradle\\caches\\transforms"
     var isDebugTask = false
@@ -107,9 +110,11 @@ class CpImage : Transform(), Plugin<Project> {
                     checkBigImage()
 
                     val start = System.currentTimeMillis()
-
                     mtDispatchOptimizeTask(imageFileList)
-                    LogUtil.log(sizeInfo())
+                    LogUtil.log(replaceSizeInfo())
+                    LogUtil.log(compressSizeInfo())
+                    LogUtil.log(totalOptimizeInfo())
+                    LogUtil.log(compressNoSizeChangeInfo())
                     LogUtil.log("---- McImage Plugin End ----, Total Time(ms) : ${System.currentTimeMillis() - start}")
                 }
 
@@ -176,6 +181,8 @@ class CpImage : Transform(), Plugin<Project> {
                 val replace_file = File(FileUtil.getToolsDirPath() + "replace.png")
                 replace_file.copyTo(file, true)
                 LogUtil.log("[replace]:" + file.absolutePath + "    old:" + old + " new:" + file.length())
+                oldReplaceSize += old
+                newReplaceSize += file.length()
                 return true
             }
             if (file.name.startsWith("ic_launcher")) {
@@ -224,7 +231,6 @@ class CpImage : Transform(), Plugin<Project> {
                 val to = if (i == coreNum - 1) imageFileList.size - 1 else (i + 1) * part - 1
                 results.add(pool.submit(Callable<Unit> {
                     for (index in from..to) {
-                        LogUtil.log(imageFileList[index].name)
                         optimizeImage(imageFileList[index])
                     }
                 }))
@@ -240,8 +246,10 @@ class CpImage : Transform(), Plugin<Project> {
 
     private fun optimizeImage(file: File) {
         val path: String = file.path
+        var oldSize = 0L
         if (File(path).exists()) {
-            oldSize += File(path).length()
+            oldSize = File(path).length()
+            oldCompressSize += oldSize
         }
         when (mcImageConfig.optimizeType) {
             Config.OPTIMIZE_WEBP_CONVERT ->
@@ -249,22 +257,28 @@ class CpImage : Transform(), Plugin<Project> {
             Config.OPTIMIZE_COMPRESS_PICTURE ->
                 CompressUtil.compressImg(file)
         }
-        countNewSize(path)
+        val newSize = countNewSize(path)
+        if (newSize == oldSize) {
+            noSizeChangeResource.add(path)
+        }
     }
 
-    private fun countNewSize(path: String) {
+    private fun countNewSize(path: String): Long {
+        var newFileSize = 0L
         if (File(path).exists()) {
-            newSize += File(path).length()
+            newFileSize += File(path).length()
         } else {
             //转成了webp
             val indexOfDot = path.lastIndexOf(".")
             val webpPath = path.substring(0, indexOfDot) + ".webp"
             if (File(webpPath).exists()) {
-                newSize += File(webpPath).length()
+                newFileSize += File(webpPath).length()
             } else {
-                LogUtil.log("McImage: optimizeImage have some Exception!!!")
+                LogUtil.log("McImage: optimizeImage have some Exception!!!:$path")
             }
         }
+        newCompressSize += newFileSize
+        return newFileSize
     }
 
     private fun checkBigImage() {
@@ -295,14 +309,41 @@ class CpImage : Transform(), Plugin<Project> {
         }
     }
 
-    private fun sizeInfo(): String {
+    private fun replaceSizeInfo(): String {
         return "->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n" +
-                "before McImage optimize: " + oldSize / 1024 + "KB\n" +
-                "after McImage optimize: " + newSize / 1024 + "KB\n" +
-                "McImage optimize size: " + (oldSize - newSize) / 1024 + "KB\n" +
+                "before replace optimize: " + oldReplaceSize / 1024 + "KB\n" +
+                "after replace optimize: " + newReplaceSize / 1024 + "KB\n" +
+                "replace optimize size: " + (oldReplaceSize - newReplaceSize) / 1024 + "KB\n" +
                 "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-"
+    }
 
+    private fun compressSizeInfo(): String {
+        return "->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n" +
+                "before compress optimize: " + oldCompressSize / 1024 + "KB\n" +
+                "after compress optimize: " + newCompressSize / 1024 + "KB\n" +
+                "compress optimize size: " + (oldCompressSize - newCompressSize) / 1024 + "KB\n" +
+                "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-"
+    }
 
+    private fun compressNoSizeChangeInfo(): String {
+        if (noSizeChangeResource.isEmpty()) {
+            return ""
+        }
+        var str = "->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n" +
+                "compress size not change:\n"
+        noSizeChangeResource.map {
+            str += "  ->$it\n"
+        }
+        str += "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-"
+        return str
+    }
+
+    private fun totalOptimizeInfo(): String {
+        return "->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>\n" +
+                "before McImage optimize: " + (oldReplaceSize + oldCompressSize) / 1024 + "KB\n" +
+                "after McImage optimize: " + (newReplaceSize + newCompressSize) / 1024 + "KB\n" +
+                "McImage optimize size: " + (oldReplaceSize + oldCompressSize - newReplaceSize - newCompressSize) / 1024 + "KB\n" +
+                "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<-"
     }
 
     override fun getName(): String {
